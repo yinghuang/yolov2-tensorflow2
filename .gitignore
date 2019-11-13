@@ -1,0 +1,8 @@
+data/*
+logs/*
+weights/*
+.ipynb_checkpoints
+__pycache__
+Jupyter Notebook
+*.ipynb
+yolo3_detect.py
