@@ -30,4 +30,7 @@ YOLOv2在Tensorflow2.0上的复现
 	- 3.2 将下载好的weights文件放在main.py中model_weights_path指示的路径。
 - 4.训练模型
 	- 4.1 main.py中weight_reader是载入模型权重的方法，iflast表示是否载入最后一层卷积层（输出的分类回归层）。
+	- 4.2 数据和模型都放好后，并且main.py里面的各个路径设置好后，运行main.py就可以训练了。main.py最下面是模型测试。
+- 5.未来
+	- 5.1 加入mAP，Recall评价指标，比如[这里](https://github.com/Cartucho/mAP)
 		
