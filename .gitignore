@@ -3,6 +3,6 @@ logs/*
 weights/*
 .ipynb_checkpoints
 __pycache__
-Jupyter Notebook
+Jupyter Notebook.lnk
 *.ipynb
 yolo3_detect.py
