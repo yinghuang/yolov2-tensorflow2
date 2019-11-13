@@ -4,7 +4,7 @@ YOLOv2在Tensorflow2.0上的复现
 - 1.准备数据
 	- 1.1 下载PASCAL VOC， [2017 train and val](http://pjreddie.com/media/files/VOCtrainval_06-Nov-2007.tar)， [2017 test](http://pjreddie.com/media/files/VOCtest_06-Nov-2007.tar)， [2012 train and val](http://pjreddie.com/media/files/VOCtrainval_11-May-2012.tar)。
 	- 1.2 全部解压，出现文件夹VOCdevkit，数据都在里面。
-	- 1.3 main.py里，data_dir为数据的VOCdevkit路径，如果使用tfrecord，需要在create_tfrecords.py里面分别生成train和val的tfrecord文件。如果使用实时地从硬盘读取图片，那么val_set指定验证集（测试集），train_set指定训练集。
+	- 1.3 main.py里，data_dir为数据的VOCdevkit路径，如果使用tfrecord，需要在create_tfrecords.py（该文件参考tf官方的[object_detectionAPI](https://github.com/tensorflow/models/blob/1af55e018eebce03fb61bba9959a04672536107d/research/object_detection/dataset_tools/create_pascal_tf_record.py)）里面分别生成train和val的tfrecord文件。如果使用实时地从硬盘读取图片，那么val_set指定验证集（测试集），train_set指定训练集。
 - 2.dataet构造。有两种方式，选择第二种更方便。
 	- 2.1 第一种，通过生成tfrecord。create_tfrecords.py可以生成tfrecord数据文件。main.py里面，以下代码是相关代码：
 		```python
