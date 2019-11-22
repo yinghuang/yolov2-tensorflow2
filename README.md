@@ -33,4 +33,5 @@ YOLOv2在Tensorflow2.0上的复现
 	- 4.2 数据和模型都放好后，并且main.py里面的各个路径设置好后，运行main.py就可以训练了。main.py最下面是模型测试。
 - 5.未来
 	- 5.1 加入mAP，Recall评价指标，比如[这里](https://github.com/Cartucho/mAP)
+- 最新发现，YOLOv2和v3的xywh loss都是在t尺度上计算的，也就是网络原始的输出，还没经过坐标变换。[参考](https://www.zhihu.com/question/357005177)
 		
