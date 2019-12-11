@@ -45,6 +45,7 @@ def yolov2_loss(detector_mask, y_true_anchor_boxes, y_true_class_hot, y_true_box
     # 0-GRID_W / GRID_H
     anchors = cfg.ANCHORS
     
+    
     # 0-GRID_W / GRID_H
     pred_xy = K.sigmoid(y_pred[:,:,:,:,0:2])
     pred_xy = pred_xy + cell_coords
@@ -56,10 +57,20 @@ def yolov2_loss(detector_mask, y_true_anchor_boxes, y_true_class_hot, y_true_box
     lambda_wh = K.expand_dims(2-(y_true_anchor_boxes[:,:,:,:,2]/cfg.GRID_W) * (y_true_anchor_boxes[:,:,:,:,3]/cfg.GRID_H))
     detector_mask = K.cast(detector_mask, tf.float32) # batch_size, GRID_W, GRID_H, n_anchors, 1
     n_objs = K.sum( K.cast( detector_mask>0, tf.float32 ) )
-    loss_xy = cfg.LAMBDA_COORD * K.sum( detector_mask * K.square( y_true_anchor_boxes[:,:,:,:,0:2] - pred_xy)) / (n_objs + 1e-6)
-    loss_wh = cfg.LAMBDA_COORD * K.sum( lambda_wh * detector_mask * K.square( y_true_anchor_boxes[:,:,:,:,2:4] - pred_wh)) / (n_objs + 1e-6)
-    #  loss_wh = cfg.LAMBDA_COORD * K.sum(detector_mask * K.square(K.sqrt(y_true_anchor_boxes[...,2:4]) - 
-    #                                                            K.sqrt(pred_wh))) / (n_objs + 1e-6)
+    #=========1.1 基于坐标值计算坐标损失
+#    loss_xy = cfg.LAMBDA_COORD * K.sum( detector_mask * K.square( y_true_anchor_boxes[:,:,:,:,0:2] - pred_xy)) / (n_objs + 1e-6)
+#    loss_wh = cfg.LAMBDA_COORD * K.sum( lambda_wh * detector_mask * K.square( y_true_anchor_boxes[:,:,:,:,2:4] - pred_wh)) / (n_objs + 1e-6)
+#    #  loss_wh = cfg.LAMBDA_COORD * K.sum(detector_mask * K.square(K.sqrt(y_true_anchor_boxes[...,2:4]) - 
+#    #                                                            K.sqrt(pred_wh))) / (n_objs + 1e-6)
+    #=========1.2 基于预测值计算坐标损失
+    y_txy = y_true_anchor_boxes[...,0:2] - cell_coords
+    y_twh = K.log(y_true_anchor_boxes[...,2:4]*1.0/anchors + 1e-16)
+    pred_txy = K.sigmoid(y_pred[:,:,:,:,0:2])
+    pred_twh = y_pred[:,:,:,:,2:4]
+    loss_xy = cfg.LAMBDA_COORD * K.sum( detector_mask * K.square( y_txy - pred_txy)) / (n_objs + 1e-6)
+    loss_wh = cfg.LAMBDA_COORD * K.sum( lambda_wh * detector_mask * K.square( y_twh - pred_twh)) / (n_objs + 1e-6)
+    
+    
     loss_coord = loss_xy + loss_wh
   
     #================ 2. 类别损失
@@ -148,7 +159,7 @@ dset_train_path = 'data/train.tfrecord'
 dset_val_path = 'data/val.tfrecord'
 batch_size = 6
 num_epochs = 30
-num_iters = 200
+num_iters = 10
 train_name = 'training_1'
 # --------------yolov2
 #cfg = Config()
@@ -180,7 +191,7 @@ weight_reader = WeightReader(model_weights_path)
 #weight_reader.load_weights(model, num_convs=23, iflast=False)
 # --------------yolov2-tiny
 model = yolov2_tiny(cfg) # 一共23个卷积层包括最后一层
-weight_reader.load_weights(model, num_convs=9, iflast=False)
+weight_reader.load_weights(model, num_convs=9, iflast=True)
 
 
 #=============== prepare training
