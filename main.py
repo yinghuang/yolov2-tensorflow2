@@ -159,7 +159,7 @@ dset_train_path = 'data/train.tfrecord'
 dset_val_path = 'data/val.tfrecord'
 batch_size = 6
 num_epochs = 30
-num_iters = 10
+num_iters = 30
 train_name = 'training_1'
 # --------------yolov2
 #cfg = Config()
@@ -191,7 +191,7 @@ weight_reader = WeightReader(model_weights_path)
 #weight_reader.load_weights(model, num_convs=23, iflast=False)
 # --------------yolov2-tiny
 model = yolov2_tiny(cfg) # 一共23个卷积层包括最后一层
-weight_reader.load_weights(model, num_convs=9, iflast=True)
+weight_reader.load_weights(model, num_convs=9, iflast=False)
 
 
 #=============== prepare training
@@ -281,14 +281,14 @@ for epoch in range(num_epochs):
 save_best_weights(model, train_name+'_epoch%dfinal'%(epoch), 666)
 
 #=============== begin testing
-#model.load_weights(best_model_path)
+model.load_weights(best_model_path)
 for bs_idx, (x,y) in enumerate(dset_val):
     x, detector_mask, y_true_anchor_boxes, y_true_class_hot, y_true_boxes_all = transform(x,y, cfg)
     
     score_threshold = 0.5 # 根据box_conf * box_class_prob筛选boxes
     iou_threshold = 0.45 # 对boxes做NMS时的阈值
     display_img(x[0], model, score_threshold, iou_threshold, cfg)
-    if (bs_idx+1)==5: break
+    if (bs_idx+1)==10: break
 
 fig,ax = plt.subplots(1, figsize=(8,8))
 ax.plot(train_loss_history[10:])
