@@ -25,6 +25,7 @@
     iou_threshold(NMS/MATCH): 0.6/0.7
 ```
 
+****
 
 ### model_V1.2
 
@@ -49,7 +50,6 @@
     score_threshold：70
     iou_threshold(NMS/MATCH): 0.6/0.7
 ```
-
 
 
 
